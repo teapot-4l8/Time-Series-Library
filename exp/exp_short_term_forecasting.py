@@ -188,9 +188,43 @@ class Exp_Short_Term_Forecast(Exp_Basic):
         _, train_loader = self._get_data(flag='train')
         _, test_loader = self._get_data(flag='test')
 
+        # Debug: print data file and partition info to confirm which data is used for testing
+        try:
+            data_fp = os.path.join(self.args.root_path, self.args.data_path)
+            if os.path.exists(data_fp):
+                df_all = pandas.read_csv(data_fp)
+                N = len(df_all)
+                num_train = int(N * 0.7)
+                num_test = int(N * 0.2)
+                num_val = N - num_train - num_test
+                border1s = [0, num_train - self.args.seq_len, N - num_test - self.args.seq_len]
+                border2s = [num_train, num_train + num_val, N]
+                border1 = border1s[2]
+                border2 = border2s[2]
+                # show a few timestamps to verify
+                dates = None
+                if 'date' in df_all.columns:
+                    try:
+                        dates = pandas.to_datetime(df_all['date'])
+                    except Exception:
+                        dates = pandas.to_datetime(df_all['date'], dayfirst=False, infer_datetime_format=True)
+                print(f"Test data file: {data_fp} (rows: {N})")
+                print(f"Test partition borders: [{border1}, {border2})  (size: {border2-border1})")
+                if dates is not None:
+                    print("Test window sample dates:")
+                    print(dates.iloc[border1:border1+3].tolist())
+                    print("...")
+                    print(dates.iloc[max(border1, border2-3):border2].tolist())
+        except Exception:
+            pass
+
         if test:
             print('loading model')
-            self.model.load_state_dict(torch.load(os.path.join('./checkpoints/' + setting, 'checkpoint.pth')))
+            # load checkpoint on CPU first to avoid CUDA device index mismatches
+            best_model_path = os.path.join('./checkpoints/' + setting, 'checkpoint.pth')
+            checkpoint = torch.load(best_model_path, map_location='cpu')
+            self.model.load_state_dict(checkpoint)
+            self.model.to(self.device)
 
         folder_path = './test_results/' + setting + '/'
         if not os.path.exists(folder_path):
@@ -252,22 +286,44 @@ class Exp_Short_Term_Forecast(Exp_Basic):
                     trues = np.concatenate(trues_list, axis=0)
                 else:
                     preds = np.zeros((0, self.args.pred_len, 1))
-                    trues = np.zeros((0, self.args.pred_len))
+                    trues = np.zeros((0, self.args.pred_len, 1))
+
+                # flatten last dim if present so trues/preds are (N, pred_len)
+                preds_flat = preds.squeeze()
+                trues_flat = trues.squeeze()
+                if preds_flat.ndim == 1:
+                    # when pred_len == 1, squeeze gives (N,), reshape to (N,1)
+                    preds_flat = preds_flat.reshape(-1, 1)
+                if trues_flat.ndim == 1:
+                    trues_flat = trues_flat.reshape(-1, 1)
 
                 # optional visualizations
-                for i in range(0, preds.shape[0], max(1, preds.shape[0] // 10)):
+                for i in range(0, preds_flat.shape[0], max(1, preds_flat.shape[0] // 10)):
                     # use last input window from batch_x for plotting if available
                     last_input = batch_x.detach().cpu().numpy()[i % batch_x.shape[0], :, 0]
-                    gt = np.concatenate((last_input, trues[i]), axis=0)
-                    pd = np.concatenate((last_input, preds[i, :, 0]), axis=0)
+                    gt = np.concatenate((last_input, trues_flat[i]), axis=0)
+                    pd = np.concatenate((last_input, preds_flat[i]), axis=0)
                     visual(gt, pd, os.path.join(folder_path, str(i) + '.pdf'))
                 
 
         print('test shape:', preds.shape)
 
-        forecasts_df = pandas.DataFrame(preds[:, :, 0], columns=[f'V{i + 1}' for i in range(self.args.pred_len)])
+        # Attempt to inverse-transform predictions back to original scale if dataset provides scaler
+        try:
+            # preds shape: (N, pred_len, C)
+            shape = preds.shape
+            # use test_loader.dataset's inverse_transform (it fits scaler during __read_data__)
+            if hasattr(test_loader.dataset, 'inverse_transform'):
+                preds_inv = test_loader.dataset.inverse_transform(preds.reshape(shape[0] * shape[1], -1)).reshape(shape)
+                preds_to_save = preds_inv[:, :, 0]
+            else:
+                preds_to_save = preds[:, :, 0]
+        except Exception:
+            preds_to_save = preds[:, :, 0]
+
+        forecasts_df = pandas.DataFrame(preds_to_save, columns=[f'V{i + 1}' for i in range(self.args.pred_len)])
         # index for custom dataset: simple numeric index
-        forecasts_df.index = np.arange(preds.shape[0])
+        forecasts_df.index = np.arange(preds_to_save.shape[0])
         forecasts_df.index.name = 'id'
         forecasts_df.to_csv(folder_path + self.args.seasonal_patterns + '_forecast.csv')
 

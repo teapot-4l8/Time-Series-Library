@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from math import sqrt
 
 # Paths (adjust if needed)
-FORECAST_CSV = './m4_results/TimesNet/Monthly_forecast.csv'
+FORECAST_CSV = '/data/sda/CYZ/Time-Series-Library/test_results/short_term_forecast_custom_timesnet_TimesNet_custom_ftMS_sl12_ll6_pl1_dm512_nh8_el2_dl1_df2048_expand2_dc4_fc1_ebtimeF_dtTrue_custom_seconds_0/Monthly_forecast.csv'
 RAW_CSV = './datasets/adjusted_data_with_seconds.csv'
 OUT_DIR = './evaluation_results'
 

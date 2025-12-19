@@ -26,7 +26,7 @@ LR=0.0001
 
 python3 run.py \
   --task_name short_term_forecast \
-  --is_training 1 \
+  --is_training 0 \
   --model_id custom_timesnet \
   --model TimesNet \
   --data custom \
@@ -46,6 +46,6 @@ python3 run.py \
   --learning_rate ${LR} \
   --des "custom_seconds" \
   --num_workers 4 \
-  --gpu 4
+  --gpu 0
 
 echo "Run finished (check ./checkpoints and ./test_results)."
