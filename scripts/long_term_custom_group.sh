@@ -1,0 +1,21 @@
+python3 run.py \
+  --task_name long_term_forecast \
+  --is_training 1 \
+  --model_id custom_group_6 \
+  --model TimesNet \
+  --data custom \
+  --root_path ./datasets \
+  --data_path adjusted_data_group_6.csv \
+  --features M \
+  --target 10LBA10CT103K \
+  --freq s \
+  --seq_len 12 \
+  --label_len 12 \
+  --pred_len 1 \
+  --enc_in 50 \
+  --dec_in 50 \
+  --c_out 50 \
+  --inverse\
+  --train_epochs 5 \
+  --batch_size 32 \
+  --devices 4 \
