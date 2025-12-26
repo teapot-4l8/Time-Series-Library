@@ -5,17 +5,17 @@ python3 run.py \
   --model TimesNet \
   --data custom \
   --root_path ./datasets \
-  --data_path adjusted_data_with_seconds.csv \
+  --data_path adjusted_data.csv \
   --features MS \
   --target 10LBA10CT103K \
   --freq s \
   --seq_len 12 \
   --label_len 6 \
-  --pred_len 6 \
+  --pred_len 1 \
   --enc_in 42 \
   --dec_in 42 \
   --c_out 1 \
-  --inverse True\
+  --inverse\
   --train_epochs 5 \
   --batch_size 32 \
   --devices 4 \
