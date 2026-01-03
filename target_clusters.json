@@ -1,0 +1,63 @@
+{
+    "n_clusters": 10,
+    "total_targets": 37,
+    "clusters": {
+        "group_1": [
+            "10HAH20CT101K",
+            "10HAH20CT102K",
+            "10HAH20CT103K"
+        ],
+        "group_2": [
+            "10HAH15CT101K"
+        ],
+        "group_3": [
+            "10HAH25CT101K"
+        ],
+        "group_4": [
+            "10HAH10CT101K",
+            "10HAH10CT102K",
+            "10HAH10CT103K"
+        ],
+        "group_5": [
+            "10HAH30CT101K",
+            "10HAH30CT102K",
+            "10HAH30CT103K",
+            "10HAH35CT101K"
+        ],
+        "group_6": [
+            "10LBA15CT101K",
+            "10LBA15CT102K",
+            "10LBA15CT103K",
+            "10LBA15CT104K",
+            "10LBA10CT101K",
+            "10LBA10CT106K",
+            "10LBA10CT102K",
+            "10LBA10CT103K",
+            "10LBA10CT104K"
+        ],
+        "group_7": [
+            "10LBA10CP109",
+            "10LBA10CP1020",
+            "10HNA10CT101K",
+            "10HNA05CT101K",
+            "10HNA05CT102K",
+            "10HNA00CT101K",
+            "10HNA00CT102K"
+        ],
+        "group_8": [
+            "10HHJ10GH001XQ01",
+            "10HBK10CT101",
+            "10HBK10CT102",
+            "10HBK10CT103"
+        ],
+        "group_9": [
+            "10HNA20CP101",
+            "10HNA20CP102"
+        ],
+        "group_10": [
+            "AM060085",
+            "10HNA20CT101K",
+            "10HNA20CT102K"
+        ]
+    }
+}

@@ -9,6 +9,7 @@ from exp.exp_anomaly_detection import Exp_Anomaly_Detection
 from exp.exp_classification import Exp_Classification
 from exp.exp_zero_shot_forecasting import Exp_Zero_Shot_Forecast
 from utils.print_args import print_args
+from utils.postprocess_and_save import postprocess_and_save
 import random
 import numpy as np
 
@@ -158,6 +159,20 @@ if __name__ == '__main__':
     parser.add_argument('--pos', type=int, choices=[0, 1], default=1, help='Positional Embedding. Set pos to 0 or 1')
 
     args = parser.parse_args()
+
+    # 自动根据 data_path 的 csv 文件列数设置 enc_in、dec_in、c_out
+    import csv
+    data_path = args.data_path
+    if not os.path.isabs(data_path):
+        data_path = os.path.join(args.root_path, data_path)
+    with open(data_path, 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        num_cols = len(header)
+    num_features = num_cols - 1
+    args.enc_in = num_features
+    args.dec_in = num_features
+    args.c_out = num_features
     if torch.cuda.is_available() and args.use_gpu:
         args.device = torch.device('cuda:{}'.format(args.gpu))
         print('Using GPU')
@@ -253,6 +268,8 @@ if __name__ == '__main__':
 
         print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
         exp.test(setting, test=1)
+        out_dir = './evaluation_results/group_6'
+        postprocess_and_save(setting, args.data_path, out_dir)
         if args.gpu_type == 'mps':
             torch.backends.mps.empty_cache()
         elif args.gpu_type == 'cuda':
