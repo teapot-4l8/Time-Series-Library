@@ -177,20 +177,21 @@ if __name__ == '__main__':
     print('Args in experiment:')
     print_args(args)
 
-    if args.task_name == 'long_term_forecast':
-        Exp = Exp_Long_Term_Forecast
-    elif args.task_name == 'short_term_forecast':
-        Exp = Exp_Short_Term_Forecast
-    elif args.task_name == 'imputation':
-        Exp = Exp_Imputation
-    elif args.task_name == 'anomaly_detection':
-        Exp = Exp_Anomaly_Detection
-    elif args.task_name == 'classification':
-        Exp = Exp_Classification
-    elif args.task_name == 'zero_shot_forecast':
-        Exp = Exp_Zero_Shot_Forecast
-    else:
-        Exp = Exp_Long_Term_Forecast
+    # if args.task_name == 'long_term_forecast':
+    #     Exp = Exp_Long_Term_Forecast
+    # elif args.task_name == 'short_term_forecast':
+    #     Exp = Exp_Short_Term_Forecast
+    # elif args.task_name == 'imputation':
+    #     Exp = Exp_Imputation
+    # elif args.task_name == 'anomaly_detection':
+    #     Exp = Exp_Anomaly_Detection
+    # elif args.task_name == 'classification':
+    #     Exp = Exp_Classification
+    # elif args.task_name == 'zero_shot_forecast':
+    #     Exp = Exp_Zero_Shot_Forecast
+    # else:
+    #     Exp = Exp_Long_Term_Forecast
+    Exp = Exp_Long_Term_Forecast
 
     if args.is_training:
         for ii in range(args.itr):
