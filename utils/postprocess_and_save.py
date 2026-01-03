@@ -1,3 +1,4 @@
+
 import os
 import numpy as np
 import pandas as pd
@@ -6,8 +7,9 @@ import matplotlib.pyplot as plt
 from math import sqrt
 import sys
 from sklearn.metrics import r2_score
+import json
 
-def postprocess_and_save(setting, data_path, out_dir='./evaluation_results/group_6'):
+def postprocess_and_save(setting, data_path, out_dir='./evaluation_results', group_id=1):
     res_folder = os.path.join('./results', setting)
     if not os.path.exists(res_folder):
         raise SystemExit(f'Result folder not found: {res_folder}')
@@ -24,6 +26,14 @@ def postprocess_and_save(setting, data_path, out_dir='./evaluation_results/group
     var_names = list(df.columns)
     if 'date' in var_names:
         var_names.remove('date')
+
+
+    with open('target_clusters.json', 'r', encoding='utf-8') as f:
+        clusters = json.load(f)["clusters"]
+    group_key = f'group_{group_id}'
+    if group_key not in clusters:
+        raise ValueError(f'{group_key} not found in target_clusters.json')
+    TARGET_VARS = clusters[group_key]
 
     os.makedirs(out_dir, exist_ok=True)
 

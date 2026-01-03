@@ -173,6 +173,8 @@ if __name__ == '__main__':
     args.enc_in = num_features
     args.dec_in = num_features
     args.c_out = num_features
+    # 自动将 target 设置为 data_path 文件的最后一列名
+    args.target = header[-1]
     if torch.cuda.is_available() and args.use_gpu:
         args.device = torch.device('cuda:{}'.format(args.gpu))
         print('Using GPU')
@@ -268,8 +270,8 @@ if __name__ == '__main__':
 
         print('>>>>>>>testing : {}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'.format(setting))
         exp.test(setting, test=1)
-        out_dir = './evaluation_results/group_6'
-        postprocess_and_save(setting, args.data_path, out_dir)
+        out_dir = f'./evaluation_results/group_{args.group}'
+        postprocess_and_save(setting, args.data_path, out_dir, args.group)
         if args.gpu_type == 'mps':
             torch.backends.mps.empty_cache()
         elif args.gpu_type == 'cuda':
