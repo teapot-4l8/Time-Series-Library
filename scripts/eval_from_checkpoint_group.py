@@ -1,21 +1,3 @@
-#!/usr/bin/env python3
-"""
-Evaluate a saved long-term checkpoint and produce metrics + plots.
-
-Usage:
-  python3 scripts/eval_from_checkpoint.py \
-    --checkpoint /path/to/checkpoint.pth \
-    --data_path ./datasets/adjusted_data_with_seconds.csv
-
-Outputs:
-  - ./results/<setting>/pred.npy and true.npy are saved by the experiment
-  - ./evaluation_results/predictions_vs_true.csv
-  - ./evaluation_results/true_vs_pred.png
-  - ./evaluation_results/error_over_time.png
-
-Fonts: plots use English Times New Roman.
-"""
-
 import os
 import argparse
 import torch
