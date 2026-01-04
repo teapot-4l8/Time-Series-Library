@@ -22,7 +22,7 @@ def postprocess_and_save(setting, data_path, out_dir='./evaluation_results', gro
     trues_flat = trues.reshape(-1, D)
 
     # 变量名顺序（与 Dataset_Custom 完全一致）
-    df = pd.read_csv(data_path)
+    df = pd.read_csv(f"./datasets/{data_path}")
     var_names = list(df.columns)
     if 'date' in var_names:
         var_names.remove('date')

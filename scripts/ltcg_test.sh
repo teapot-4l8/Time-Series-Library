@@ -2,7 +2,7 @@
 # TODO test的逻辑
 
 
-for i in 1 2 3 4 5 6 7 8 9 10
+for i in 5
 do
   DATA_PATH=adjusted_data_group_${i}.csv
   MODEL_ID=custom_group_${i}
@@ -22,5 +22,6 @@ do
     --inverse \
     --train_epochs 5 \
     --group $i \
-    --batch_size 32 \ 
-done  # <--- 这里必须有 done
+    --batch_size 32 \
+    --devices 4
+done # <--- 这里必须有 done

@@ -22,6 +22,7 @@ do
     --inverse \
     --train_epochs 5 \
     --batch_size 32 \
+    --group $i \
     --devices 4
 done  # <--- 这里必须有 done
 
